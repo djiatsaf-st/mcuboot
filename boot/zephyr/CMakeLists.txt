@@ -524,6 +524,9 @@ if(CONFIG_BOOT_MAX_IMG_SECTORS_AUTO)
     message(WARNING "Unable to determine erase size of slot0 partition, cannot calculate minimum sector usage")
   else()
     math(EXPR slot_min_sectors "${slot0_size} / ${erase_size_slot0}")
+    message("slot0 sector size of sectors: ${slot0_size}") # add
+    message("erase sector size of sectors: ${erase_size_slot0}") # add
+    # message("ratio =====> : ${erase_size_slot0}") # add
   endif()
 
   if(NOT CONFIG_SINGLE_APPLICATION_SLOT AND NOT CONFIG_SINGLE_APPLICATION_SLOT_RAM_LOAD)
@@ -533,7 +536,6 @@ if(CONFIG_BOOT_MAX_IMG_SECTORS_AUTO)
       message(WARNING "Unable to determine erase size of slot1 partition, cannot calculate minimum sector usage")
     else()
       math(EXPR slot1_min_sectors "${slot1_size} / ${erase_size_slot1}")
-
       if("${slot1_min_sectors}" GREATER "${slot_min_sectors}")
         set(slot_min_sectors ${slot1_min_sectors})
       endif()

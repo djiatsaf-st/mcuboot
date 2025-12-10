@@ -39,6 +39,7 @@
 #include <string.h>
 #include <inttypes.h>
 #include <stddef.h>
+#include  <stdio.h>
 
 #include "sysflash/sysflash.h"
 #include "flash_map_backend/flash_map_backend.h"
@@ -575,11 +576,15 @@ boot_set_next(const struct flash_area *fa, bool active, bool confirm)
         break;
 
     case BOOT_MAGIC_BAD:
+	    printf(" bad magic\n");
         if (active) {
             rc = BOOT_EBADVECT;
         } else {
             /* This image will not be boot next time anyway */
+             flash_area_erase(fa, 0, flash_area_get_size(fa));
             rc = BOOT_EBADIMAGE;
+	        printf(" bad magic =====> %d\n",  rc);
+
         }
         break;
 
@@ -693,11 +698,13 @@ boot_set_pending_multi(int image_index, int permanent)
     int rc;
 
     rc = flash_area_open(FLASH_AREA_IMAGE_SECONDARY(image_index), &fap);
+	printf(" multi =====> %d\n",  rc);
     if (rc != 0) {
         return BOOT_EFLASH;
     }
-
+    
     rc = boot_set_next(fap, false, !(permanent == 0));
+	printf(" next =====> %d\n",  rc);
 
     flash_area_close(fap);
     return rc;
